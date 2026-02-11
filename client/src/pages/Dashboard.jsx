@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Sidebar } from "../components/Sidebar";
 
 export const Dashboard = () => {
   return (
-    <div>Dashboard</div>
-  )
-}
+    <div className="flex gap-4">
+      <Sidebar />
+
+      <div>Dashboard</div>
+    </div>
+  );
+};

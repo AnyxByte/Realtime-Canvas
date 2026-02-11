@@ -13,6 +13,7 @@ import {
   Download,
 } from "lucide-react";
 import { useNavigate } from "react-router";
+import { Logo } from "./components/Logo";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,12 +54,7 @@ function App() {
 
       {/* Navbar */}
       <nav className="relative z-50 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2 font-bold text-xl md:text-2xl tracking-tight">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shrink-0 shadow-lg shadow-indigo-200">
-            ∞
-          </div>
-          <span>CanvasFlow</span>
-        </div>
+        <Logo />
 
         {/* Desktop Links */}
         <div className="hidden md:flex gap-8 font-medium text-slate-600">
@@ -246,16 +242,11 @@ function App() {
       {/* Footer */}
       <footer className="relative z-10 bg-white border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-2 font-bold text-xl">
-            <div className="w-6 h-6 bg-indigo-600 rounded flex items-center justify-center text-white text-[10px]">
-              ∞
-            </div>
-            <span>CanvasFlow</span>
-          </div>
-          <p className="text-slate-400 text-sm">
+          <Logo />
+          <p className="text-slate-400 text-md">
             © 2026 CanvasFlow. Built for creators, by creators.
           </p>
-          <div className="flex gap-6 text-sm text-slate-500 font-semibold">
+          <div className="flex gap-6 text-lg text-slate-500 font-semibold ">
             <a href="#" className="hover:text-indigo-600 transition-colors">
               Twitter
             </a>

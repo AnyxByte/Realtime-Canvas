@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+  }
+  .dark {
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+  }
+}
