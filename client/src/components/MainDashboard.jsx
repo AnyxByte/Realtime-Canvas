@@ -15,7 +15,7 @@ export const MainDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-stretch">
         {/* 1. NEW BOARD BUTTON */}
-        <button className="flex flex-col items-center justify-center gap-4 bg-blue-600 rounded-4xl p-8 transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 active:scale-[0.98] min-h-85 w-full">
+        <button className="flex flex-col items-center justify-center gap-4 bg-blue-600 rounded-4xl p-8 transition-all hover:bg-blue-700 hover:shadow-2xl hover:shadow-blue-200 active:scale-[0.98] min-h-85 w-full cursor-pointer">
           <div className="w-14 h-14 flex items-center justify-center text-white border-2 border-white/30 rounded-full group-hover:border-white">
             <Plus size={36} strokeWidth={1.5} />
           </div>
