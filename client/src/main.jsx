@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Auth from "./pages/Auth.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
+import { Board } from "./pages/Excelboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "/board",
+    element: <Board />,
   },
 ]);
 
