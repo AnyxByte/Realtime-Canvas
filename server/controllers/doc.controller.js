@@ -1,18 +1,61 @@
 import { Doc } from "../models/doc.model.js";
+import resend from "../utils/email.js";
 
-export const handleGetAllDocs = async (req, res) => {};
+export const handleGetAllDocs = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-export const handleGetSingleDocs = async (req, res) => {};
+    const doc = await Doc.find({
+      $or: [{ createdBy: userId }, { collaborators: userId }],
+    })
+      .populate("createdBy", "username")
+      .populate("collaborators", "username");
+
+    return res.status(200).json({
+      msg: "fetched docs successfully",
+      doc,
+    });
+  } catch (error) {
+    console.log("handleGetAllDocs error:- ", error);
+    return res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
 
 export const handleCreateDocs = async (req, res) => {
   try {
-    const { name, content } = req.body;
+    const { name, content, collaborators } = req.body;
     const userId = req.user.id;
 
-    await Doc.create({
+    const collaboratorsId = collaborators.map((u) => u.userId) || [];
+    const collaboratorsEmail = collaborators.map((u) => u.email) || [];
+
+    const doc = await Doc.create({
       name,
       content,
       createdBy: userId,
+      collaborators: collaboratorsId,
+    });
+
+    //send message to collaborators using nodemailers
+
+    if (collaboratorsEmail.length > 0) {
+      await resend.emails.send({
+        from: "Whiteboard <onboarding@resend.dev>",
+        to: collaboratorsEmail,
+        subject: "Added to Document",
+        html: `
+        
+         <p>${userEmail} added you to a document.</p>
+            <a href="${process.env.CLIENT_URL}/doc/${doc._id}">
+              Open Document
+            </a>`,
+      });
+    }
+
+    return res.status(200).json({
+      msg: "Document created successfully",
     });
   } catch (error) {
     console.log("handleCreateDocs error:- ", error);
@@ -21,6 +64,8 @@ export const handleCreateDocs = async (req, res) => {
     });
   }
 };
+
+export const handleGetSingleDocs = async (req, res) => {};
 
 export const handleDeleteDocs = async (req, res) => {};
 
