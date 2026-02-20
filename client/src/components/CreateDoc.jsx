@@ -1,117 +1,120 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { X } from "lucide-react";
+import Select from "react-select";
+
+// Format options for react-select
+const USER_OPTIONS = [
+  { value: "sarah", label: "Sarah Logan", email: "sarah@acme.com" },
+  { value: "john", label: "John Doe", email: "john@acme.com" },
+  { value: "alex", label: "Alex Rivera", email: "alex@acme.com" },
+  { value: "maria", label: "Maria Chen", email: "maria@acme.com" },
+];
 
 export const CreateDoc = ({ open, setOpen }) => {
   const [name, setName] = useState("");
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleCreate = () => {
-    if (!name.trim()) {
-      alert("Board name is required");
-      return;
-    }
-
-    console.log("Board Name:", name);
-    console.log("Image File:", image);
-
-    // Reset
-    setName("");
-    setImage(null);
-    setPreview(null);
+    if (!name.trim()) return;
+    console.log({ name, collaborators: selectedUsers });
     setOpen(false);
+    setName("");
+    setSelectedUsers([]);
+  };
+
+  // Custom styles for react-select to match your UI
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      padding: "2px",
+      borderRadius: "0.75rem", // rounded-xl
+      backgroundColor: "#f8fafc", // bg-slate-50
+      borderWidth: "1px",
+      borderColor: state.isFocused ? "#6366f1" : "#e2e8f0", // indigo-500 : slate-200
+      boxShadow: state.isFocused ? "0 0 0 2px rgba(99, 102, 241, 0.2)" : "none",
+      "&:hover": { borderColor: "#6366f1" },
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "#e0e7ff", // indigo-100
+      borderRadius: "6px",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "#4338ca", // indigo-700
+      fontWeight: "600",
+      fontSize: "12px",
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: "#6366f1",
+      "&:hover": { backgroundColor: "#6366f1", color: "white" },
+    }),
   };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40" />
-
-        <Dialog.Content
-          className="
-            fixed top-1/2 left-1/2
-            -translate-x-1/2 -translate-y-1/2
-            bg-white p-6 rounded-lg shadow-xl
-            w-105 max-w-[90vw]
-            z-50
-            space-y-4
-          "
-        >
-          <Dialog.Title className="text-lg font-bold">
-            Create New Board
-          </Dialog.Title>
-
-          {/* Board Name */}
-          <input
-            type="text"
-            placeholder="Board name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          {/* Image Upload */}
-          <div className="space-y-2">
-            <label className="block text-lg font-medium">
-              Upload cover image
-            </label>
-
-            {/* Hidden input */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-              id="cover-upload"
-            />
-
-            {/* Custom upload box */}
-            <label
-              htmlFor="cover-upload"
-              className="
-                  w-full h-40
-                  border-2 border-dashed border-gray-300
-                  rounded-lg
-                  flex items-center justify-center
-                  cursor-pointer
-                  hover:bg-gray-50 transition
-                  overflow-hidden
-                "
-            >
-              {preview ? (
-                <img
-                  src={preview}
-                  alt="preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-500">Click to upload image</span>
-              )}
-            </label>
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-end gap-2 pt-2">
+        <Dialog.Overlay className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100]" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-md z-[101] outline-none">
+          <div className="flex justify-between items-center mb-6">
+            <Dialog.Title className="text-2xl font-black text-slate-900">
+              New Board
+            </Dialog.Title>
             <button
               onClick={() => setOpen(false)}
-              className="px-4 py-2 bg-gray-200 rounded"
+              className="text-slate-400 hover:text-slate-600"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <div className="space-y-6">
+            {/* Board Name */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">
+                Board Name
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Project Phoenix"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-medium"
+              />
+            </div>
+
+            {/* Multi-Select Users */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1">
+                Invite Collaborators
+              </label>
+              <Select
+                isMulti
+                options={USER_OPTIONS}
+                value={selectedUsers}
+                onChange={setSelectedUsers}
+                styles={customStyles}
+                placeholder="Select teammates..."
+                className="text-sm"
+                isSearchable
+              />
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-10">
+            <button
+              onClick={() => setOpen(false)}
+              className="flex-1 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-all"
             >
               Cancel
             </button>
-
             <button
               onClick={handleCreate}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95"
             >
-              Create
+              Create Board
             </button>
           </div>
         </Dialog.Content>
