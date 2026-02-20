@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { ArrowLeft, Github, Chrome, Mail, Lock, User, Zap } from "lucide-react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,8 +15,33 @@ function Auth() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (values) => {
+  const navigate = useNavigate();
+
+  const onSubmit = async (values) => {
     console.log("values:-", values);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    try {
+      const payload = {};
+      payload.email = values.email;
+      payload.password = values.password;
+      if (!isLogin) {
+        payload.username = values.username;
+        await axios.post(`${backendUrl}/api/auth/register`, payload);
+        setIsLogin(true);
+        toast.success("Registered successfull");
+      } else {
+        const response = await axios.post(
+          `${backendUrl}/api/auth/login`,
+          payload,
+        );
+        Cookies.set("token", response.data.token);
+        toast.success("Login successfull");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Error");
+      console.log("error:-", error);
+    }
   };
 
   return (

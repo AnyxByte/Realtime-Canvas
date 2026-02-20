@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import connectDb from "./utils/db.js";
 import userRouter from "./routes/user.route.js";
 import docRouter from "./routes/doc.route.js";
@@ -13,6 +14,13 @@ const PORT = 3000 || process.env.PORT;
 await connectDb();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  }),
+);
 
 app.get("/test", (req, res) => {
   return res.status(200).json({
