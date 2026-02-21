@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ArrowLeft, Github, Chrome, Mail, Lock, User, Zap } from "lucide-react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
 
@@ -35,6 +35,7 @@ function Auth() {
           payload,
         );
         Cookies.set("token", response.data.token);
+        localStorage.setItem("UserEmail", JSON.stringify(values.email));
         toast.success("Login successfull");
         navigate("/dashboard");
       }

@@ -2,22 +2,59 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { X } from "lucide-react";
 import Select from "react-select";
-
-// Format options for react-select
-const USER_OPTIONS = [
-  { value: "sarah", label: "Sarah Logan", email: "sarah@acme.com" },
-  { value: "john", label: "John Doe", email: "john@acme.com" },
-  { value: "alex", label: "Alex Rivera", email: "alex@acme.com" },
-  { value: "maria", label: "Maria Chen", email: "maria@acme.com" },
-];
+import { useUser } from "../context/UserContext";
+import axios from "axios";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 export const CreateDoc = ({ open, setOpen }) => {
   const [name, setName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const { users } = useUser();
+  const [loading, setLoading] = useState(false);
 
-  const handleCreate = () => {
+  const USER_OPTIONS = users.map((u) => {
+    return { value: u.username, label: u.username, email: u.email };
+  });
+
+  const handleCreate = async () => {
     if (!name.trim()) return;
-    console.log({ name, collaborators: selectedUsers });
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const token = Cookies.get("token");
+    if (!token) {
+      alert("login again");
+      return;
+    }
+    setLoading(true);
+
+    const selectedEmails = new Set(selectedUsers?.map((u) => u.email));
+    const collaborators = users
+      .filter((u) => selectedEmails.has(u.email))
+      .map((user) => ({
+        userId: user._id,
+        email: user.email,
+      }));
+    const payload = {
+      name,
+      content: "",
+      collaborators,
+    };
+
+    try {
+      await axios.post(`${backendUrl}/api/docs/create`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setLoading(false);
+      toast.success("Created successfull");
+    } catch (error) {
+      setLoading(false);
+      toast.error("Error");
+      console.log("creating docs error", error);
+    }
+
     setOpen(false);
     setName("");
     setSelectedUsers([]);
@@ -114,7 +151,7 @@ export const CreateDoc = ({ open, setOpen }) => {
               onClick={handleCreate}
               className="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95"
             >
-              Create Board
+              {loading ? "Creating..." : "Create Board"}
             </button>
           </div>
         </Dialog.Content>

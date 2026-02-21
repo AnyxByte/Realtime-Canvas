@@ -100,7 +100,7 @@ export const handleGetAllUsers = async (req, res) => {
       });
     }
 
-    const user = await User.find({}).select("username email");
+    const user = await User.find({}).select("username email ");
 
     return res.status(200).json({
       msg: "all users",
