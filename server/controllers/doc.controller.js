@@ -95,6 +95,33 @@ export const handleGetSingleDocs = async (req, res) => {
   }
 };
 
-export const handleDeleteDocs = async (req, res) => {};
+export const handleDeleteDocs = async (req, res) => {
+  try {
+    const docId = req.params.id;
+
+    if (!docId) {
+      return res.status(400).json({
+        msg: "no document id",
+      });
+    }
+
+    const doc = await Doc.findByIdAndDelete(docId);
+
+    if (!doc) {
+      return res.status(400).json({
+        msg: "no such document",
+      });
+    }
+
+    return res.status(200).json({
+      msg: "deleted successfully",
+    });
+  } catch (error) {
+    console.log("handleDeleteDocs error:- ", error);
+    return res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
 
 export const handleUpdateDocs = async (req, res) => {};
