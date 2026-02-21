@@ -124,4 +124,43 @@ export const handleDeleteDocs = async (req, res) => {
   }
 };
 
-export const handleUpdateDocs = async (req, res) => {};
+export const handleUpdateDocs = async (req, res) => {
+  try {
+    const docId = req.params.id;
+
+    const { name, content } = req.body;
+
+    if (!docId || !name || !content) {
+      return res.status(400).json({
+        msg: "Missing fields",
+      });
+    }
+
+    const doc = await Doc.findByIdAndUpdate(
+      docId,
+      {
+        name,
+        content,
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (!doc) {
+      return res.status(400).json({
+        msg: "no such document",
+      });
+    }
+
+    return res.status(200).json({
+      msg: "doc updated successfully",
+      doc,
+    });
+  } catch (error) {
+    console.log("handleUpdateDocs error:- ", error);
+    return res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
