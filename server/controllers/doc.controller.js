@@ -47,7 +47,7 @@ export const handleCreateDocs = async (req, res) => {
         subject: "Added to Document",
         html: `
         
-         <p>${userEmail} added you to a document.</p>
+         <p>${req.user.email} added you to a document.</p>
             <a href="${process.env.CLIENT_URL}/doc/${doc._id}">
               Open Document
             </a>`,

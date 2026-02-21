@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDb from "./utils/db.js";
 import userRouter from "./routes/user.route.js";
 import docRouter from "./routes/doc.route.js";
+import { auth } from "./middlewares/auth.js";
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ app.get("/test", (req, res) => {
 });
 
 app.use("/api/auth", userRouter);
-app.use("/api/docs", docRouter);
+app.use("/api/docs", auth, docRouter);
 
 app.listen(PORT, () => {
   console.log(`Server started at port ${PORT}`);

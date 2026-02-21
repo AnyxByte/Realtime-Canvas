@@ -32,6 +32,7 @@ export const handleUserLogin = async (req, res) => {
     const payload = {
       username: user.username,
       email: user.email,
+      id: user._id,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -83,6 +84,30 @@ export const handleUserRegister = async (req, res) => {
     });
   } catch (error) {
     console.log("handleUserRegister error:- ", error);
+    return res.status(500).json({
+      msg: "server error",
+    });
+  }
+};
+
+export const handleGetAllUsers = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        msg: "unauthorized",
+      });
+    }
+
+    const user = await User.find({}).select("username email");
+
+    return res.status(200).json({
+      msg: "all users",
+      user,
+    });
+  } catch (error) {
+    console.log("handleGetAllUsers error:- ", error);
     return res.status(500).json({
       msg: "server error",
     });

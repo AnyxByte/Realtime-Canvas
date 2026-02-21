@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-export const auth = (res, res, next) => {
+export const auth = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -11,13 +11,11 @@ export const auth = (res, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    const verified = jwt.verify(token , process.env.JWT_SECRET);
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
 
-    // if(verified){
-    //   req.user = verified
-    // }
-    // to be continued 
-
+    req.user = verified;
+    
+    next();
   } catch (error) {
     console.log("error at auth middleware: ", error);
     return res.status(500).json({
