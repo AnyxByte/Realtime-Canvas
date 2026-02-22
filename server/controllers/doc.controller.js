@@ -128,9 +128,9 @@ export const handleUpdateDocs = async (req, res) => {
   try {
     const docId = req.params.id;
 
-    const { name, content } = req.body;
+    const { content } = req.body;
 
-    if (!docId || !name || !content) {
+    if (!docId || !content) {
       return res.status(400).json({
         msg: "Missing fields",
       });
@@ -139,7 +139,6 @@ export const handleUpdateDocs = async (req, res) => {
     const doc = await Doc.findByIdAndUpdate(
       docId,
       {
-        name,
         content,
       },
       {

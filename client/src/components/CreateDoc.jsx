@@ -6,12 +6,14 @@ import { useUser } from "../context/UserContext";
 import axios from "axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useDoc } from "../context/DocContext";
 
 export const CreateDoc = ({ open, setOpen }) => {
   const [name, setName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const { users } = useUser();
   const [loading, setLoading] = useState(false);
+  const { fetchDocs } = useDoc();
 
   const USER_OPTIONS = users.map((u) => {
     return { value: u.username, label: u.username, email: u.email };
@@ -46,6 +48,7 @@ export const CreateDoc = ({ open, setOpen }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+      await fetchDocs();
 
       setLoading(false);
       toast.success("Created successfull");

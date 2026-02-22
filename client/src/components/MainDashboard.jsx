@@ -15,6 +15,7 @@ import axios from "axios";
 
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 function timeAgo(timestamp) {
   const now = new Date();
@@ -45,6 +46,8 @@ export const MainDashboard = () => {
   const [open, setOpen] = useState(false);
   const { docs, setDocs } = useDoc();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  const navigate = useNavigate();
 
   const handleDeleteDocs = async (id) => {
     const token = Cookies.get("token");
@@ -140,10 +143,13 @@ export const MainDashboard = () => {
                       align="end"
                       sideOffset={4}
                       className="z-9999 min-w-35 bg-white rounded-xl shadow-xl border border-slate-100 p-1 animate-in fade-in zoom-in-95 duration-100"
-                      onClick={(e) => e.stopPropagation()}
                     >
-                      <DropdownMenu.Item className="flex items-center px-3 py-2 text-sm font-semibold text-slate-700 rounded-lg cursor-pointer outline-none hover:bg-slate-50 transition-colors">
-                        Edit name
+                      <DropdownMenu.Item
+                        role="button"
+                        onClick={() => navigate(`/board/${doc._id}`)}
+                        className="flex items-center px-3 py-2 text-sm font-semibold text-slate-700 rounded-lg cursor-pointer outline-none hover:bg-slate-50 transition-colors"
+                      >
+                        Edit
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         role="button"
