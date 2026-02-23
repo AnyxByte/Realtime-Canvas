@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import "@excalidraw/excalidraw/index.css";
@@ -5,6 +6,7 @@ import axios from "axios";
 import { useParams } from "react-router";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
 export const Board = () => {
   const [data, setData] = useState(null);
@@ -13,6 +15,18 @@ export const Board = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const token = Cookies.get("token");
+
+  const webSocketRef = useRef(null);
+
+  useEffect(() => {
+    const socket = io(backendUrl);
+    webSocketRef.current = socket;
+
+    return () => {
+      socket.disconnect();
+      webSocketRef.current = null;
+    };
+  }, []);
 
   const fetchDocDetails = useCallback(async () => {
     try {
@@ -23,7 +37,8 @@ export const Board = () => {
         },
       });
       let docs = response.data.doc.content;
-      docs = JSON.parse(docs);
+
+      docs = docs.length > 0 ? JSON.parse(docs) : [];
       setData(docs);
       setLoading(false);
     } catch (error) {
@@ -67,6 +82,10 @@ export const Board = () => {
     }
   };
 
+  const handleShare = () => {
+    alert("shared");
+  };
+
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Excalidraw
@@ -90,7 +109,7 @@ export const Board = () => {
             </button>
 
             <button
-              onClick={handleSave}
+              onClick={handleShare}
               style={{
                 padding: "8px 16px",
                 background: "#2563EB",

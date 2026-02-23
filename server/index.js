@@ -5,12 +5,14 @@ import connectDb from "./utils/db.js";
 import userRouter from "./routes/user.route.js";
 import docRouter from "./routes/doc.route.js";
 import { auth } from "./middlewares/auth.js";
+import { Server } from "socket.io";
+import { ws } from "./utils/ws.js";
 
 dotenv.config();
 
 const app = express();
 
-const PORT = 3000 || process.env.PORT;
+const PORT =  process.env.PORT || 3000;
 
 await connectDb();
 
@@ -32,6 +34,15 @@ app.get("/test", (req, res) => {
 app.use("/api/auth", userRouter);
 app.use("/api/docs", auth, docRouter);
 
-app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`Server started at port ${PORT}`);
 });
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  },
+});
+
+io.on("connection", ws);
