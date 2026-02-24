@@ -5,8 +5,6 @@ import connectDb from "./utils/db.js";
 import userRouter from "./routes/user.route.js";
 import docRouter from "./routes/doc.route.js";
 import { auth } from "./middlewares/auth.js";
-import { Server } from "socket.io";
-import { ws } from "./utils/ws.js";
 
 dotenv.config();
 
@@ -34,15 +32,6 @@ app.get("/test", (req, res) => {
 app.use("/api/auth", userRouter);
 app.use("/api/docs", auth, docRouter);
 
-const httpServer = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server started at port ${PORT}`);
 });
-
-export const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  },
-});
-
-io.on("connection", ws);
