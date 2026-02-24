@@ -1,9 +1,10 @@
 import React from "react";
 import { ChevronsUpDown } from "lucide-react"; // Using this for the selector icon in your image
 
-const UserProfile = ({ name = "Acme Corp" }) => {
+const UserProfile = () => {
   // Get the first letter and capitalize it
-  const firstLetter = name.charAt(0).toUpperCase();
+  const username = JSON.parse(localStorage.getItem("UserEmail")).username;
+  const firstLetter = username.charAt(0).toUpperCase();
 
   return (
     <div className="flex py-2 px-4 items-center justify-between hover:bg-slate-100 rounded-xl cursor-pointer transition-all w-full max-w-60">
@@ -16,9 +17,8 @@ const UserProfile = ({ name = "Acme Corp" }) => {
         </div>
 
         {/* The Username */}
-        <span className="font-bold text-slate-700 truncate">{name}</span>
+        <span className="font-bold text-slate-700 truncate">{username}</span>
       </div>
-
     </div>
   );
 };

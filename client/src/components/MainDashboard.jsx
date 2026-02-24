@@ -7,6 +7,7 @@ import {
   FileText,
   Clock,
   User2,
+  Search,
 } from "lucide-react";
 import { CreateDoc } from "./CreateDoc";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -47,6 +48,8 @@ export const MainDashboard = () => {
   const { docs, setDocs } = useDoc();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const navigate = useNavigate();
 
   const handleDeleteDocs = async (id) => {
@@ -69,9 +72,17 @@ export const MainDashboard = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredDocs = docs.filter((doc) =>
+    doc?.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
   return (
     <div className="mt-8 mx-auto flex flex-col gap-4 px-6 md:px-10 pb-20 max-w-7xl w-screen">
-      <SearchInput />
+      <SearchInput handleChange={handleChange} />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
@@ -95,8 +106,8 @@ export const MainDashboard = () => {
       </div>
 
       <div className="flex flex-col gap-2 mt-2">
-        {docs.length > 0 &&
-          docs.map((doc) => (
+        {filteredDocs.length > 0 &&
+          filteredDocs.map((doc) => (
             <div
               key={doc._id}
               onClick={() => console.log("Open board")}
