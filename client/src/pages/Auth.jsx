@@ -35,7 +35,7 @@ function Auth() {
           payload,
         );
         Cookies.set("token", response.data.token);
-        localStorage.setItem("UserEmail", JSON.stringify(values.email));
+        localStorage.setItem("UserEmail", JSON.stringify(response.data.user));
         toast.success("Login successfull");
         navigate("/dashboard");
       }

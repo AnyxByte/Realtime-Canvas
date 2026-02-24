@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 
-const PORT =  process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 await connectDb();
 
@@ -38,7 +38,7 @@ const httpServer = app.listen(PORT, () => {
   console.log(`Server started at port ${PORT}`);
 });
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: process.env.CLIENT_URL,
     credentials: true,

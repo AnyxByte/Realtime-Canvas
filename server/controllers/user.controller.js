@@ -42,6 +42,7 @@ export const handleUserLogin = async (req, res) => {
     return res.status(200).json({
       msg: "login successfull",
       token,
+      user : payload
     });
   } catch (error) {
     console.log("handleUserLogin error:- ", error);

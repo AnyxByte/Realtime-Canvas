@@ -21,7 +21,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const storedEmail = localStorage.getItem("UserEmail");
-      const userEmail = storedEmail ? JSON.parse(storedEmail) : null;
+      const userEmail = storedEmail ? JSON.parse(storedEmail).email : null;
 
       const response = await axios.get(`${backendUrl}/api/auth/all`, {
         headers: {
