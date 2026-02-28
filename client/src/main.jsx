@@ -9,6 +9,7 @@ import { Board } from "./pages/Excelboard.jsx";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "./context/UserContext.jsx";
 import { DocProvider } from "./context/DocContext.jsx";
+import { ProtectedRoute } from "./config/ProtectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,11 +23,13 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      <UserProvider>
-        <DocProvider>
-          <Dashboard />
-        </DocProvider>
-      </UserProvider>
+      <ProtectedRoute>
+        <UserProvider>
+          <DocProvider>
+            <Dashboard />
+          </DocProvider>
+        </UserProvider>
+      </ProtectedRoute>
     ),
   },
   {
